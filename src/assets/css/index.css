@@ -1,0 +1,18 @@
+.fl-left{
+  float: left; }
+
+.card-title{
+  border-bottom: 1px solid #dedede;
+  padding: 10px;
+  margin-bottom: 0;
+}
+
+.brd-btm{
+  border-bottom: 1px solid #838383;
+}
+
+.btn-container{
+  text-align: right;
+  border-top:1px solid #dedede;
+  padding: 10px;
+}
