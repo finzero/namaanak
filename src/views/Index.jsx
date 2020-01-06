@@ -35,36 +35,12 @@ import {
 
 import classnames from "classnames";
 import "../assets/css/index.css";
-
-// core components
-// import DemoNavbar from "components/Navbars/DemoNavbar.jsx";
-// import CardsFooter from "components/Footers/CardsFooter.jsx";
 import { NameList } from "components/NameList.jsx";
 
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-
-// index page sections
-// import Hero from "./IndexSections/Hero.jsx";
-// import Buttons from "./IndexSections/Buttons.jsx";
-// import Inputs from "./IndexSections/Inputs.jsx";
-// import CustomControls from "./IndexSections/CustomControls.jsx";
-// import Menus from "./IndexSections/Menus.jsx";
-// import Navbars from "./IndexSections/Navbars.jsx";
-// import Tabs from "./IndexSections/Tabs.jsx";
-// import Progress from "./IndexSections/Progress.jsx";
-// import Pagination from "./IndexSections/Pagination.jsx";
-// import Pills from "./IndexSections/Pills.jsx";
-// import Labels from "./IndexSections/Labels.jsx";
-// import Alerts from "./IndexSections/Alerts.jsx";
-// import Typography from "./IndexSections/Typography.jsx";
-// import Modals from "./IndexSections/Modals.jsx";
-// import Datepicker from "./IndexSections/Datepicker.jsx";
-// import TooltipPopover from "./IndexSections/TooltipPopover.jsx";
-// import Carousel from "./IndexSections/Carousel.jsx";
-// import Icons from "./IndexSections/Icons.jsx";
-// import Login from "./IndexSections/Login.jsx";
-// import Download from "./IndexSections/Download.jsx";
+import Carousel from "./IndexSections/Carousel.jsx";
+import BabyCarousel from "./IndexSections/BabyCarousel.jsx";
 
 
 class Index extends React.Component {
@@ -90,7 +66,13 @@ class Index extends React.Component {
   };
 
   onSelectName(selectedNames){
-    this.setState({selectedNames: selectedNames})
+
+    let selNameState = this.state.selectedNames;
+    selNameState[selectedNames.order] = selectedNames;
+
+    this.setState({
+      selectedNames: selNameState
+    })
   }
 
   onSaveSelectedName(){
@@ -102,8 +84,9 @@ class Index extends React.Component {
       ...this.state, 
       savedNames: [...this.state.savedNames, newRecord],
       selectedNames: []
+    }, () => {
+      this.saveToLocalStorage();
     })
-    this.nameList.onClearSelect();
     NotificationManager.success('Nama Berhasil disimpan','Simpan')
   }
 
@@ -113,11 +96,23 @@ class Index extends React.Component {
     this.setState({
       ...this.state,
       savedNames: names
+    }, ()=>{
+      this.saveToLocalStorage();
     })
+    
     NotificationManager.success('Nama Berhasil dihapus','Hapus')
   }
 
   componentDidMount() {
+    if(localStorage.getItem('savedNames')){
+      this.setState({
+        savedNames: JSON.parse(localStorage.getItem('savedNames'))
+      })
+    }
+  }
+
+  saveToLocalStorage(){
+    localStorage.setItem('savedNames',JSON.stringify(this.state.savedNames))
   }
 
   render() {
@@ -186,30 +181,39 @@ class Index extends React.Component {
           </Col>
           <Col className="mt-5 mt-lg-0 fl-left" lg="4">
             <div className="nav-wrapper">
-            <Card className="shadow">
-              <CardTitle className="text-center">Nama yang dipilih</CardTitle>
-              <CardBody>
-                <div>
-                  <b className="brd-btm">Nama</b><br/>
-                  {
-                    this.state.selectedNames.map(item => {
-                      return <span key={item.name}><b>{item.name}</b>&nbsp;</span>
-                    })
-                  }
+              <Card className="shadow">
+                <CardTitle className="text-center">Nama yang dipilih</CardTitle>
+                <CardBody>
+                  <div>
+                    <b className="brd-btm">Nama</b><br/>
+                    {
+                      this.state.selectedNames.map(item => {
+                        return <span key={item.name}><b>{item.name}</b>&nbsp;</span>
+                      })
+                    }
+                  </div>
+                  <div>
+                    <br/><b className="brd-btm">Arti</b>
+                    {
+                      this.state.selectedNames.map(item => {
+                        return <div key={item.name}><b>{item.name}</b>, {item.meaning}&nbsp;<br/></div>
+                      })
+                    }
+                  </div>
+                </CardBody>
+                <div className="btn-container">
+                  <Button onClick={this.onSaveSelectedName} disabled={!this.state.selectedNames.length} className="btn-1" color="primary" type="button">Simpan</Button>
                 </div>
-                <div>
-                  <br/><b className="brd-btm">Arti</b>
-                  {
-                    this.state.selectedNames.map(item => {
-                      return <div key={item.name}><b>{item.name}</b>, {item.meaning}&nbsp;<br/></div>
-                    })
-                  }
-                </div>
-              </CardBody>
-              <div className="btn-container">
-                <Button onClick={this.onSaveSelectedName} disabled={!this.state.selectedNames.length} className="btn-1" color="primary" type="button">Simpan</Button>
-              </div>
-            </Card>
+              </Card>
+            </div>
+            <div className="nav-wrapper">
+              <Card className="shadow">
+                <CardBody>
+                  <div>
+                    <BabyCarousel />
+                  </div>
+                </CardBody>
+              </Card>
             </div>
           </Col>
         </section>

@@ -1,41 +1,9 @@
 import React from "react";
 import API from "../utils/API.jsx";
 import MUIDataTable from "mui-datatables";
-// import CustomToolbarSelect from "./MUIDatatable/CustomToolbarSelect.jsx";
-// import CustomFooter from "./MUIDatatable/CustomFooter.jsx";
-// import CustomToolbar from "./MUIDatatable/CustomToolbar.jsx";
-
-import BootstrapTable from 'react-bootstrap-table-next';
-
-/* const columns = [
-  {
-    name: "name",
-    label: "Nama",
-    options: {
-      filter: true,
-      sort: true
-    }
-  },
-  {
-    name: "meaning",
-    label: "Arti",
-    options: {
-      filter: true,
-      sort: true
-    }
-  }
-] */
-
-const columns = [
-  {
-    dataField: 'name',
-    text: 'Nama'
-  },
-  {
-    dataField: 'meaning',
-    text: 'Arti'
-  },
-];
+import CustomToolbarSelect from "./MUIDatatable/CustomToolbarSelect.jsx";
+import CustomFooter from "./MUIDatatable/CustomFooter.jsx";
+import CustomToolbar from "./MUIDatatable/CustomToolbar.jsx";
 
 export class NameList extends React.Component{
 
@@ -50,13 +18,15 @@ export class NameList extends React.Component{
       selectedNames: []
     };
 
-    /* this.options = {
+    this.options = {
       filterType: 'checkbox',
       rowsPerPage: 8,
-      selectableRowsOnClick: true,
+      selectableRowsOnClick: false,
+      selectableRows: 'none',
       onRowsSelect: this.onRowsSelect,
       selectableRowsHeader: false,
       selectableRowsHeader: false,
+      viewColumns: false,
       filter: false,
       searchOpen: true,
       responsive: 'scrollMaxHeight',
@@ -76,7 +46,48 @@ export class NameList extends React.Component{
             textLabels={textLabels} />
         );
       }
-    }; */
+    };
+  }
+
+  columns = [
+    {
+      name: "name",
+      label: "Nama",
+      options: {
+        filter: true,
+        sort: true
+      }
+    },
+    {
+      name: "meaning",
+      label: "Arti",
+      options: {
+        filter: true,
+        sort: true
+      }
+    },
+    {
+      name: "setAs",
+      label: "Pilih Sebagai",
+      options: {
+        filter: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <React.Fragment>
+              <button onClick={()=>this.setAs(0, tableMeta.rowData)} type="button" className="btn btn-info btn-sm">Nama Depan</button>
+              <button onClick={()=>this.setAs(1, tableMeta.rowData)} type="button" className="btn btn-info btn-sm">Nama Tengah</button>
+              <button onClick={()=>this.setAs(2, tableMeta.rowData)} type="button" className="btn btn-info btn-sm">Nama Belakang</button>
+            </React.Fragment>
+          )
+        }
+      }
+    }
+  ]
+  
+
+  setAs(id, value){
+    // console.log('setAs',id,value);
+    this.props.onSelectName({name: value[0], meaning: value[1], order: id})
   }
 
   componentWillUnmount() {
@@ -112,21 +123,13 @@ export class NameList extends React.Component{
             return <span key={x.name}>{x.name}</span>
           })
         }
-        {/* <MUIDataTable
+        <MUIDataTable
           title={"Nama Nama Anak"}
           data={this.state.names}
-          columns={columns}
+          columns={this.columns}
           options={this.options}
-        /> */}
-
-        <BootstrapTable
-          keyField="id"
-          data={ this.state.names }
-          columns={ columns }
-          striped
-          hover
-          condensed
         />
+
         </>
       )
     }
