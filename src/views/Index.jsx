@@ -39,7 +39,7 @@ import { NameList } from "components/NameList.jsx";
 
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import Carousel from "./IndexSections/Carousel.jsx";
+// import Carousel from "./IndexSections/Carousel.jsx";
 import BabyCarousel from "./IndexSections/BabyCarousel.jsx";
 
 
@@ -56,6 +56,7 @@ class Index extends React.Component {
     this.onSelectName = this.onSelectName.bind(this);
     this.onSaveSelectedName = this.onSaveSelectedName.bind(this);
     this.onDeleteName = this.onDeleteName.bind(this);
+    this.onCancelSelectedName = this.onCancelSelectedName.bind(this);
   }
 
   toggleNavs = (e, state, index) => {
@@ -78,7 +79,7 @@ class Index extends React.Component {
   onSaveSelectedName(){
     let newRecord = {
       name: this.state.selectedNames.map(x=>x.name).join(' '),
-      meaning: this.state.selectedNames.map(x=>x.meaning).join(' | ')
+      meaning: this.state.selectedNames.filter(meaning=>meaning).map(x=>x.meaning).join(' | ')
     }
     this.setState({
       ...this.state, 
@@ -88,6 +89,12 @@ class Index extends React.Component {
       this.saveToLocalStorage();
     })
     NotificationManager.success('Nama Berhasil disimpan','Simpan')
+  }
+
+  onCancelSelectedName(){
+     this.setState({
+       selectedNames: []
+     })
   }
 
   onDeleteName(index){
@@ -109,6 +116,10 @@ class Index extends React.Component {
         savedNames: JSON.parse(localStorage.getItem('savedNames'))
       })
     }
+  }
+
+  removeDoubleBar(str){
+    return str.replace('|  |','|');
   }
 
   saveToLocalStorage(){
@@ -202,6 +213,7 @@ class Index extends React.Component {
                   </div>
                 </CardBody>
                 <div className="btn-container">
+                  <Button onClick={this.onCancelSelectedName} disabled={!this.state.selectedNames.length} className="btn-1" color="primary" type="button">Batal</Button>
                   <Button onClick={this.onSaveSelectedName} disabled={!this.state.selectedNames.length} className="btn-1" color="primary" type="button">Simpan</Button>
                 </div>
               </Card>

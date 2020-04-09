@@ -68,15 +68,15 @@ export class NameList extends React.Component{
     },
     {
       name: "setAs",
-      label: "Pilih Sebagai",
+      label: "Set Sebagai",
       options: {
         filter: false,
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
             <React.Fragment>
-              <button onClick={()=>this.setAs(0, tableMeta.rowData)} type="button" className="btn btn-info btn-sm">Nama Depan</button>
-              <button onClick={()=>this.setAs(1, tableMeta.rowData)} type="button" className="btn btn-info btn-sm">Nama Tengah</button>
-              <button onClick={()=>this.setAs(2, tableMeta.rowData)} type="button" className="btn btn-info btn-sm">Nama Belakang</button>
+              <button onClick={()=>this.setAs(0, tableMeta.rowData)} type="button" className="btn btn-info btn-sm">Depan</button>
+              <button onClick={()=>this.setAs(1, tableMeta.rowData)} type="button" className="btn btn-info btn-sm">Tengah</button>
+              <button onClick={()=>this.setAs(2, tableMeta.rowData)} type="button" className="btn btn-info btn-sm">Belakang</button>
             </React.Fragment>
           )
         }
